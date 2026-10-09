@@ -1,0 +1,114 @@
+import React from 'react';
+import { TabType } from '../types/fleet';
+import { 
+  Compass, 
+  MessageSquare, 
+  FileText, 
+  Wallet, 
+  User 
+} from 'lucide-react';
+
+interface BottomNavProps {
+  activeTab: TabType;
+  onTabChange: (tab: TabType) => void;
+  unreadMessagesCount?: number;
+}
+
+export const BottomNav: React.FC<BottomNavProps> = ({
+  activeTab,
+  onTabChange,
+  unreadMessagesCount = 3,
+}) => {
+  return (
+    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg">
+      <div className="max-w-md mx-auto grid grid-cols-5 h-16 items-center px-1">
+        
+        {/* Tab 1: Inicio / Telemetría GPS */}
+        <button
+          onClick={() => onTabChange('inicio')}
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
+            activeTab === 'inicio' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className="relative">
+            <Compass className={`w-5 h-5 ${activeTab === 'inicio' ? 'stroke-[2.5]' : 'stroke-2'}`} />
+            {activeTab === 'inicio' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#F6C300] rounded-full" />
+            )}
+          </div>
+          <span className="text-[11px] mt-1 font-medium">Inicio</span>
+        </button>
+
+        {/* Tab 2: Mensajes */}
+        <button
+          onClick={() => onTabChange('mensajes')}
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
+            activeTab === 'mensajes' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className="relative">
+            <MessageSquare className={`w-5 h-5 ${activeTab === 'mensajes' ? 'stroke-[2.5]' : 'stroke-2'}`} />
+            {unreadMessagesCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-[#F6C300] text-slate-950 text-[9px] font-black w-4 h-4 rounded-full flex items-center justify-center border border-white">
+                {unreadMessagesCount}
+              </span>
+            )}
+            {activeTab === 'mensajes' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#F6C300] rounded-full" />
+            )}
+          </div>
+          <span className="text-[11px] mt-1 font-medium">Mensajes</span>
+        </button>
+
+        {/* Tab 3: Liquidación Semanal */}
+        <button
+          onClick={() => onTabChange('liquidacion')}
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
+            activeTab === 'liquidacion' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className="relative">
+            <Wallet className={`w-5 h-5 ${activeTab === 'liquidacion' ? 'stroke-[2.5]' : 'stroke-2'}`} />
+            {activeTab === 'liquidacion' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#F6C300] rounded-full" />
+            )}
+          </div>
+          <span className="text-[11px] mt-1 font-medium">Cobros</span>
+        </button>
+
+        {/* Tab 4: Documentos */}
+        <button
+          onClick={() => onTabChange('documentos')}
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
+            activeTab === 'documentos' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className="relative">
+            <FileText className={`w-5 h-5 ${activeTab === 'documentos' ? 'stroke-[2.5]' : 'stroke-2'}`} />
+            {activeTab === 'documentos' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#F6C300] rounded-full" />
+            )}
+          </div>
+          <span className="text-[11px] mt-1 font-medium">Documentos</span>
+        </button>
+
+        {/* Tab 5: Perfil */}
+        <button
+          onClick={() => onTabChange('perfil')}
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
+            activeTab === 'perfil' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          }`}
+        >
+          <div className="relative">
+            <User className={`w-5 h-5 ${activeTab === 'perfil' ? 'stroke-[2.5]' : 'stroke-2'}`} />
+            {activeTab === 'perfil' && (
+              <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-[#F6C300] rounded-full" />
+            )}
+          </div>
+          <span className="text-[11px] mt-1 font-medium">Perfil</span>
+        </button>
+
+      </div>
+    </nav>
+  );
+};

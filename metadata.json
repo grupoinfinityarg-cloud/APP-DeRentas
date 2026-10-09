@@ -1,0 +1,6 @@
+{
+  "name": "DeRentas - Gestión de Flota y Choferes",
+  "description": "Plataforma integral de logística vehicular, liquidaciones semanales, documentación legal de automotor, telemetría GPS y mensajería de flota.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
