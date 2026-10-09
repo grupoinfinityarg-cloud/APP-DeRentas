@@ -1,6 +1,6 @@
 export type UserRole = 'chofer' | 'admin';
 
-export type TabType = 'inicio' | 'mensajes' | 'liquidacion' | 'documentos' | 'perfil';
+export type TabType = 'inicio' | 'gps' | 'mensajes' | 'liquidacion' | 'documentos' | 'perfil' | 'rendimiento';
 
 export interface BillingItem {
   id: string;

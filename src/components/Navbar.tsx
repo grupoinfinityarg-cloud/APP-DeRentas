@@ -7,8 +7,7 @@ import {
   Monitor, 
   UserCheck, 
   Car,
-  KeyRound,
-  Sparkles
+  Menu
 } from 'lucide-react';
 
 interface NavbarProps {
@@ -21,6 +20,7 @@ interface NavbarProps {
   onToggleMobileView: () => void;
   onOpenNotifications: () => void;
   unreadNotifications: number;
+  onOpenMobileMenu: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -33,13 +33,24 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleMobileView,
   onOpenNotifications,
   unreadNotifications,
+  onOpenMobileMenu,
 }) => {
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200 shadow-xs">
-      <div className="max-w-7xl mx-auto px-4 h-15 flex items-center justify-between gap-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 h-14 sm:h-15 flex items-center justify-between gap-2 sm:gap-3">
         
-        {/* Brand Zone */}
-        <div className="flex items-center gap-3 shrink-0">
+        {/* Brand Zone + Mobile Hamburger Trigger */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Hamburger button (Mobile only) */}
+          <button
+            type="button"
+            onClick={onOpenMobileMenu}
+            className="md:hidden p-2 text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-xl transition-colors active:scale-95"
+            aria-label="Abrir menú principal"
+          >
+            <Menu className="w-5 h-5 text-slate-800" />
+          </button>
+
           <div 
             onClick={() => onTabChange('inicio')}
             className="flex items-center gap-2 cursor-pointer select-none group"
@@ -48,14 +59,14 @@ export const Navbar: React.FC<NavbarProps> = ({
               <Car className="w-4 h-4" />
             </div>
             <div className="flex items-baseline">
-              <span className="text-slate-950 font-black text-xl tracking-tight">
+              <span className="text-slate-950 font-black text-lg sm:text-xl tracking-tight">
                 De<span className="text-[#F6C300] font-black">Rentas</span>
               </span>
             </div>
           </div>
 
-          {/* Role badge selector */}
-          <div className="flex items-center p-0.5 bg-slate-100 rounded-lg border border-slate-200">
+          {/* Role badge selector (Hidden on tiny screens to avoid overflow, accessible in drawer) */}
+          <div className="hidden sm:flex items-center p-0.5 bg-slate-100 rounded-lg border border-slate-200">
             <button
               onClick={() => onRoleChange('chofer')}
               className={`px-2.5 py-1 rounded-md text-xs font-bold transition-all flex items-center gap-1 ${
@@ -89,7 +100,32 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'inicio' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
             }`}
           >
-            GPS Telemetría
+            Inicio
+          </button>
+          <button
+            onClick={() => onTabChange('gps')}
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
+              activeTab === 'gps' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
+            }`}
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span>GPS Mapa</span>
+          </button>
+          <button
+            onClick={() => onTabChange('liquidacion')}
+            className={`px-3 py-1.5 rounded-lg transition-colors ${
+              activeTab === 'liquidacion' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
+            }`}
+          >
+            Liquidación
+          </button>
+          <button
+            onClick={() => onTabChange('documentos')}
+            className={`px-3 py-1.5 rounded-lg transition-colors ${
+              activeTab === 'documentos' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
+            }`}
+          >
+            Documentos
           </button>
           <button
             onClick={() => onTabChange('mensajes')}
@@ -101,20 +137,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             <span className="bg-[#F6C300] text-slate-950 px-1.5 py-0.2 rounded-full text-[10px] font-black">3</span>
           </button>
           <button
-            onClick={() => onTabChange('liquidacion')}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
-              activeTab === 'liquidacion' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
+            onClick={() => onTabChange('rendimiento')}
+            className={`px-3 py-1.5 rounded-lg transition-colors flex items-center gap-1 ${
+              activeTab === 'rendimiento' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
             }`}
           >
-            Liquidación Semanal
-          </button>
-          <button
-            onClick={() => onTabChange('documentos')}
-            className={`px-3 py-1.5 rounded-lg transition-colors ${
-              activeTab === 'documentos' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
-            }`}
-          >
-            Documentos & Cédula
+            <span>Rendimiento</span>
           </button>
           <button
             onClick={() => onTabChange('perfil')}
@@ -122,7 +150,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               activeTab === 'perfil' ? 'bg-slate-100 text-slate-950 font-extrabold' : 'hover:bg-slate-50 hover:text-slate-900'
             }`}
           >
-            Perfil & Auto
+            Perfil
           </button>
         </nav>
 

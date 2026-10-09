@@ -11,6 +11,7 @@ import {
 // Components & Modals
 import { Navbar } from './components/Navbar';
 import { BottomNav } from './components/BottomNav';
+import { MobileDrawer } from './components/MobileDrawer';
 import { BillingItemModal } from './components/BillingItemModal';
 import { PaymentModal } from './components/PaymentModal';
 import { QuickControlModal } from './components/QuickControlModal';
@@ -18,12 +19,14 @@ import { DocumentViewerModal } from './components/DocumentViewerModal';
 import { BroadcastModal } from './components/BroadcastModal';
 
 // Screens
+import { HomeScreen } from './screens/HomeScreen';
 import { GpsTelemetryScreen } from './screens/GpsTelemetryScreen';
 import { MessagesTelemetryScreen } from './screens/MessagesTelemetryScreen';
 import { SettlementBillingScreen } from './screens/SettlementBillingScreen';
 import { DocumentsScreen } from './screens/DocumentsScreen';
 import { DriverProfileScreen } from './screens/DriverProfileScreen';
 import { LoginScreen } from './screens/LoginScreen';
+import { PerformanceDashboardScreen } from './screens/PerformanceDashboardScreen';
 
 import { 
   CheckCircle2, 
@@ -41,9 +44,10 @@ import {
 export default function App() {
   // App state
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-  const [currentRole, setCurrentRole] = useState<UserRole>('admin');
-  const [activeTab, setActiveTab] = useState<TabType>('liquidacion');
+  const [currentRole, setCurrentRole] = useState<UserRole>('chofer');
+  const [activeTab, setActiveTab] = useState<TabType>('inicio');
   const [isMobileView, setIsMobileView] = useState<boolean>(false);
+  const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
 
   // Domain data
   const [billingItems, setBillingItems] = useState<BillingItem[]>(INITIAL_BILLING_ITEMS);
@@ -168,17 +172,18 @@ export default function App() {
         onToggleMobileView={() => setIsMobileView(!isMobileView)}
         onOpenNotifications={() => setNotificationsOpen(true)}
         unreadNotifications={3}
+        onOpenMobileMenu={() => setIsMobileDrawerOpen(true)}
       />
 
       {/* Perspective / Demo Banner bar */}
-      <div className="bg-slate-900 text-white text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-3">
+      <div className="bg-slate-900 text-white text-xs py-1.5 px-3 sm:px-4">
+        <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-[#F6C300] shrink-0" />
-            <span className="font-semibold text-slate-300 truncate">
+            <span className="font-semibold text-slate-300 truncate text-[11px] sm:text-xs">
               {currentRole === 'admin' 
-                ? 'Panel de Flota: Podés editar ítems de cobro, ver telemetría GPS y enviar difusiones.'
-                : 'Panel del Conductor: Podés consultar tu liquidación, pagar cuotas y validar tu cédula.'}
+                ? 'Panel de Flota: Gestión de telemetría GPS, ítems de cobro y difusiones.'
+                : 'Panel de Chofer: Inicio, liquidación semanal, telemetría y cédula oficial.'}
             </span>
           </div>
 
@@ -190,7 +195,7 @@ export default function App() {
               }}
               className="text-[#F6C300] hover:underline font-bold text-[11px] flex items-center gap-1 cursor-pointer"
             >
-              <span>+ Probar Modal de Cobro</span>
+              <span>+ Nuevo Ítem</span>
             </button>
             <span className="text-slate-600 hidden sm:inline">•</span>
             <button
@@ -204,16 +209,32 @@ export default function App() {
         </div>
       </div>
 
-      {/* MAIN CONTENT WRAPPER */}
-      <main className="flex-1 flex justify-center py-4 px-2 sm:px-4">
+      {/* MAIN CONTENT WRAPPER (Mobile-first priority: edge-to-edge on mobile with safe padding) */}
+      <main className="flex-1 flex justify-center py-3 sm:py-5 px-2.5 sm:px-4 overflow-x-hidden">
         <div className={`w-full transition-all duration-300 ${
           isMobileView 
             ? 'max-w-md bg-white rounded-3xl shadow-xl border border-slate-200/80 p-3 sm:p-4 min-h-[88vh]' 
-            : 'max-w-4xl'
+            : 'max-w-xl sm:max-w-4xl'
         }`}>
 
           {/* ACTIVE TAB ROUTING */}
           {activeTab === 'inicio' && (
+            <HomeScreen
+              driver={driver}
+              vehicle={vehicle}
+              pendingBalance={pendingAmount}
+              totalInvoiced={currentTotal}
+              onNavigate={setActiveTab}
+              onOpenQuickControl={() => setIsQuickControlOpen(true)}
+              onOpenPaymentModal={() => setIsPaymentModalOpen(true)}
+              onOpenAddItemModal={() => {
+                setEditingItem(null);
+                setIsBillingModalOpen(true);
+              }}
+            />
+          )}
+
+          {activeTab === 'gps' && (
             <GpsTelemetryScreen
               vehicle={vehicle}
               driver={driver}
@@ -226,7 +247,7 @@ export default function App() {
             <MessagesTelemetryScreen
               conversations={conversations}
               onOpenBroadcastModal={() => setIsBroadcastModalOpen(true)}
-              onSelectVehicleLocation={() => setActiveTab('inicio')}
+              onSelectVehicleLocation={() => setActiveTab('gps')}
               onOpenDriverDocuments={() => setActiveTab('documentos')}
             />
           )}
@@ -274,8 +295,33 @@ export default function App() {
             />
           )}
 
+          {activeTab === 'rendimiento' && (
+            <PerformanceDashboardScreen />
+          )}
+
         </div>
       </main>
+
+      {/* MOBILE DRAWER (HAMBURGER MENU) */}
+      <MobileDrawer
+        isOpen={isMobileDrawerOpen}
+        onClose={() => setIsMobileDrawerOpen(false)}
+        activeTab={activeTab}
+        onNavigate={setActiveTab}
+        currentRole={currentRole}
+        onRoleChange={(r) => {
+          setCurrentRole(r);
+          showToast(`Rol actualizado a: ${r === 'admin' ? 'Administrador' : 'Chofer'}`);
+        }}
+        driver={driver}
+        vehicle={vehicle}
+        onOpenQuickControl={() => setIsQuickControlOpen(true)}
+        onOpenAddItemModal={() => {
+          setEditingItem(null);
+          setIsBillingModalOpen(true);
+        }}
+        onSignOut={() => setIsLoggedIn(false)}
+      />
 
       {/* FIXED BOTTOM NAVIGATION BAR (Thumb zone on mobile) */}
       <BottomNav

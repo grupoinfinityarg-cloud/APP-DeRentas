@@ -101,19 +101,19 @@ export const SettlementBillingScreen: React.FC<SettlementBillingScreenProps> = (
       </div>
 
       {/* MAIN SETTLEMENT STATUS CARD (Matches Image 7) */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 shadow-xs space-y-4">
+      <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-slate-200 shadow-xs space-y-4">
         
         {/* Card Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between gap-2 flex-wrap">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-lg bg-amber-100 flex items-center justify-center text-amber-800">
               <CreditCard className="w-4 h-4" />
             </div>
-            <h2 className="font-black text-base sm:text-lg text-slate-900 tracking-tight uppercase">
+            <h2 className="font-black text-sm sm:text-lg text-slate-900 tracking-tight uppercase">
               Estado de Liquidación
             </h2>
           </div>
-          <span className="bg-amber-100 text-amber-900 font-bold text-xs px-3 py-1 rounded-full border border-amber-200 flex items-center gap-1.5">
+          <span className="bg-amber-100 text-amber-900 font-bold text-[11px] sm:text-xs px-2.5 py-1 rounded-full border border-amber-200 flex items-center gap-1.5 shrink-0">
             <span className="w-2 h-2 rounded-full bg-amber-500" />
             Vence Dom 23:59hs
           </span>

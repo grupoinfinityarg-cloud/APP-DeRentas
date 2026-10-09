@@ -16,6 +16,22 @@
   line-height: 1;
 }
 
+/* Leaflet Custom Marker Clean Reset */
+.custom-fleet-marker {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 1rem !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.leaflet-popup-content {
+  margin: 10px 14px !important;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 5px;

@@ -507,80 +507,77 @@ export const MessagesTelemetryScreen: React.FC<MessagesTelemetryScreenProps> = (
           </div>
 
           {/* Level radio selector */}
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between flex-wrap gap-2 text-xs">
+            <div className="flex items-center gap-1.5 flex-wrap">
               <span className="text-slate-500 font-semibold text-[11px]">Nivel:</span>
               <button
                 type="button"
                 onClick={() => setUrgencyLevel('alta')}
-                className={`px-2.5 py-1 rounded-md text-xs font-bold border transition-all flex items-center gap-1 ${
+                className={`px-2 py-1 rounded-md text-[11px] font-bold border transition-all flex items-center gap-1 ${
                   urgencyLevel === 'alta'
                     ? 'bg-red-50 text-red-700 border-red-300'
                     : 'bg-white text-slate-600 border-slate-200'
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-red-600" />
-                Alta / Auxilio
+                <span className="w-1.5 h-1.5 rounded-full bg-red-600" />
+                Auxilio
               </button>
               <button
                 type="button"
                 onClick={() => setUrgencyLevel('general')}
-                className={`px-2.5 py-1 rounded-md text-xs font-bold border transition-all flex items-center gap-1 ${
+                className={`px-2 py-1 rounded-md text-[11px] font-bold border transition-all flex items-center gap-1 ${
                   urgencyLevel === 'general'
                     ? 'bg-slate-200 text-slate-900 border-slate-300'
                     : 'bg-white text-slate-600 border-slate-200'
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-slate-400" />
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-400" />
                 General
               </button>
               <button
                 type="button"
                 onClick={() => setUrgencyLevel('cobro')}
-                className={`px-2.5 py-1 rounded-md text-xs font-bold border transition-all flex items-center gap-1 ${
+                className={`px-2 py-1 rounded-md text-[11px] font-bold border transition-all flex items-center gap-1 ${
                   urgencyLevel === 'cobro'
                     ? 'bg-amber-100 text-amber-900 border-amber-300'
                     : 'bg-white text-slate-600 border-slate-200'
                 }`}
               >
-                <span className="w-2 h-2 rounded-full bg-amber-500" />
-                Cobro / Pago
+                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                Cobro
               </button>
             </div>
 
-            <div className="flex items-center gap-1 text-[11px] text-emerald-700 font-semibold">
-              <Lock className="w-3.5 h-3.5" />
-              <span>Canal Oficial Cifrado</span>
+            <div className="flex items-center gap-1 text-[10px] text-emerald-700 font-semibold">
+              <Lock className="w-3 h-3" />
+              <span>Canal Cifrado</span>
             </div>
           </div>
 
           {/* Input text field & Send Alerta button */}
-          <div className="flex items-center gap-2">
-            <div className="flex-1 relative flex items-center rounded-xl border border-slate-300 bg-white focus-within:border-[#F6C300] px-3">
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex-1 relative flex items-center rounded-xl border border-slate-300 bg-white focus-within:border-[#F6C300] px-2.5 sm:px-3">
               <input
                 type="text"
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
-                placeholder={`Escribir mensaje oficial o indicación técnica a ${activeConversation.driverName}...`}
-                className="w-full h-11 text-xs sm:text-sm bg-transparent border-0 focus:outline-none placeholder:text-slate-400"
+                placeholder={`Escribir indicación técnica...`}
+                className="w-full h-10 sm:h-11 text-xs bg-transparent border-0 focus:outline-none placeholder:text-slate-400"
               />
-              <div className="flex items-center gap-1.5 text-slate-400">
-                <button type="button" className="hover:text-slate-700 p-1">
-                  <Paperclip className="w-4 h-4" />
+              <div className="flex items-center gap-1 text-slate-400">
+                <button type="button" className="hover:text-slate-700 p-1 hidden sm:block">
+                  <Paperclip className="w-3.5 h-3.5" />
                 </button>
                 <button type="button" className="hover:text-slate-700 p-1">
-                  <Wrench className="w-4 h-4" />
-                </button>
-                <button type="button" className="hover:text-slate-700 p-1">
-                  <Camera className="w-4 h-4" />
+                  <Camera className="w-3.5 h-3.5" />
                 </button>
                 <button 
                   type="button" 
                   onClick={() => onSelectVehicleLocation(activeConversation.plate)}
                   className="hover:text-slate-700 p-1"
                 >
-                  <MapPin className="w-4 h-4 text-amber-600" />
+                  <MapPin className="w-3.5 h-3.5 text-amber-600" />
                 </button>
               </div>
             </div>
@@ -588,9 +585,9 @@ export const MessagesTelemetryScreen: React.FC<MessagesTelemetryScreenProps> = (
             <button
               type="button"
               onClick={() => handleSendMessage()}
-              className="h-11 px-4 bg-[#F6C300] hover:bg-[#DFB000] text-slate-950 font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 active:scale-95 transition-all shrink-0"
+              className="h-10 sm:h-11 px-3 sm:px-4 bg-[#F6C300] hover:bg-[#DFB000] text-slate-950 font-bold text-xs rounded-xl shadow-xs flex items-center gap-1 active:scale-95 transition-all shrink-0"
             >
-              <span>Enviar Alerta</span>
+              <span className="hidden sm:inline">Enviar</span>
               <Send className="w-3.5 h-3.5" />
             </button>
           </div>
