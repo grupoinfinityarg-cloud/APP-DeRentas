@@ -1,5 +1,5 @@
 import React from 'react';
-import { TabType } from '../types/fleet';
+import { TabType, ThemeMode } from '../types/fleet';
 import { 
   Home, 
   MapPin, 
@@ -12,22 +12,32 @@ interface BottomNavProps {
   activeTab: TabType;
   onTabChange: (tab: TabType) => void;
   unreadMessagesCount?: number;
+  theme?: ThemeMode;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   onTabChange,
   unreadMessagesCount = 3,
+  theme = 'light',
 }) => {
+  const isDark = theme === 'dark';
+
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 shadow-lg md:hidden">
+    <nav className={`fixed bottom-0 left-0 right-0 z-40 backdrop-blur-md border-t shadow-lg md:hidden transition-colors duration-250 ${
+      isDark 
+        ? 'bg-slate-900/95 border-slate-800 text-slate-300' 
+        : 'bg-white/95 border-slate-200 text-slate-600'
+    }`}>
       <div className="max-w-md mx-auto grid grid-cols-5 h-16 items-center px-1">
         
         {/* Tab 1: Inicio / Dashboard */}
         <button
           onClick={() => onTabChange('inicio')}
-          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
-            activeTab === 'inicio' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 cursor-pointer ${
+            activeTab === 'inicio' 
+              ? isDark ? 'text-[#F6C300] font-black' : 'text-slate-950 font-bold' 
+              : isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <div className="relative">
@@ -42,12 +52,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         {/* Tab 2: GPS Telemetría */}
         <button
           onClick={() => onTabChange('gps')}
-          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
-            activeTab === 'gps' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 cursor-pointer ${
+            activeTab === 'gps' 
+              ? isDark ? 'text-[#F6C300] font-black' : 'text-slate-950 font-bold' 
+              : isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <div className="relative">
-            <MapPin className={`w-5 h-5 ${activeTab === 'gps' ? 'stroke-[2.5]' : 'stroke-2 text-blue-600'}`} />
+            <MapPin className={`w-5 h-5 ${activeTab === 'gps' ? 'stroke-[2.5]' : 'stroke-2 text-blue-500'}`} />
             {activeTab === 'gps' && (
               <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-[#F6C300] rounded-full" />
             )}
@@ -58,8 +70,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         {/* Tab 3: Liquidación Semanal */}
         <button
           onClick={() => onTabChange('liquidacion')}
-          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
-            activeTab === 'liquidacion' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 cursor-pointer ${
+            activeTab === 'liquidacion' 
+              ? isDark ? 'text-[#F6C300] font-black' : 'text-slate-950 font-bold' 
+              : isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <div className="relative">
@@ -74,8 +88,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         {/* Tab 4: Documentos */}
         <button
           onClick={() => onTabChange('documentos')}
-          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
-            activeTab === 'documentos' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 cursor-pointer ${
+            activeTab === 'documentos' 
+              ? isDark ? 'text-[#F6C300] font-black' : 'text-slate-950 font-bold' 
+              : isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <div className="relative">
@@ -90,8 +106,10 @@ export const BottomNav: React.FC<BottomNavProps> = ({
         {/* Tab 5: Mensajes */}
         <button
           onClick={() => onTabChange('mensajes')}
-          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 ${
-            activeTab === 'mensajes' ? 'text-slate-950 font-bold' : 'text-slate-500 hover:text-slate-800'
+          className={`flex flex-col items-center justify-center h-full transition-colors active:scale-95 cursor-pointer ${
+            activeTab === 'mensajes' 
+              ? isDark ? 'text-[#F6C300] font-black' : 'text-slate-950 font-bold' 
+              : isDark ? 'text-slate-400 hover:text-slate-200' : 'text-slate-500 hover:text-slate-800'
           }`}
         >
           <div className="relative">

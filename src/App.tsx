@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { UserRole, TabType, BillingItem, PaymentRecord } from './types/fleet';
+import React, { useState, useEffect } from 'react';
+import { UserRole, TabType, BillingItem, PaymentRecord, MaintenanceRecord, ThemeMode, FontScale } from './types/fleet';
 import { 
   INITIAL_DRIVER, 
   INITIAL_VEHICLE, 
   INITIAL_BILLING_ITEMS, 
   INITIAL_PAYMENTS, 
-  INITIAL_CONVERSATIONS 
+  INITIAL_CONVERSATIONS,
+  INITIAL_MAINTENANCE_RECORDS
 } from './data/mockData';
 
 // Components & Modals
@@ -27,6 +28,7 @@ import { DocumentsScreen } from './screens/DocumentsScreen';
 import { DriverProfileScreen } from './screens/DriverProfileScreen';
 import { LoginScreen } from './screens/LoginScreen';
 import { PerformanceDashboardScreen } from './screens/PerformanceDashboardScreen';
+import { MaintenanceLogScreen } from './screens/MaintenanceLogScreen';
 
 import { 
   CheckCircle2, 
@@ -49,12 +51,71 @@ export default function App() {
   const [isMobileView, setIsMobileView] = useState<boolean>(false);
   const [isMobileDrawerOpen, setIsMobileDrawerOpen] = useState<boolean>(false);
 
+  // Theme & Accessibility Font Scale state with localStorage persistence
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    try {
+      const saved = localStorage.getItem('derentas_theme');
+      return saved === 'dark' ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
+  });
+
+  const [fontScale, setFontScale] = useState<FontScale>(() => {
+    try {
+      const saved = localStorage.getItem('derentas_font_scale');
+      return (saved === 'large' || saved === 'xlarge') ? saved : 'normal';
+    } catch {
+      return 'normal';
+    }
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('derentas_theme', theme);
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+      document.documentElement.setAttribute('data-theme', theme);
+    } catch {
+      // ignore
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('derentas_font_scale', fontScale);
+      document.documentElement.setAttribute('data-font-scale', fontScale);
+    } catch {
+      // ignore
+    }
+  }, [fontScale]);
+
+  const handleToggleTheme = () => {
+    const nextTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(nextTheme);
+    showToast(nextTheme === 'dark' ? 'Modo Oscuro activado (visión nocturna)' : 'Modo Claro activado');
+  };
+
+  const handleChangeFontScale = (scale: FontScale) => {
+    setFontScale(scale);
+    const labels: Record<FontScale, string> = {
+      normal: 'Texto estándar (100%)',
+      large: 'Texto confortable en auto (+15%)',
+      xlarge: 'Texto grande de alta visibilidad (+30%)',
+    };
+    showToast(`Accesibilidad: ${labels[scale]}`);
+  };
+
   // Domain data
   const [billingItems, setBillingItems] = useState<BillingItem[]>(INITIAL_BILLING_ITEMS);
   const [payments, setPayments] = useState<PaymentRecord[]>(INITIAL_PAYMENTS);
   const [conversations, setConversations] = useState(INITIAL_CONVERSATIONS);
   const [vehicle, setVehicle] = useState(INITIAL_VEHICLE);
   const [driver, setDriver] = useState(INITIAL_DRIVER);
+  const [maintenanceRecords, setMaintenanceRecords] = useState<MaintenanceRecord[]>(INITIAL_MAINTENANCE_RECORDS);
 
   // Modals state
   const [isBillingModalOpen, setIsBillingModalOpen] = useState<boolean>(false);
@@ -121,6 +182,23 @@ export default function App() {
     showToast(`Difusión masiva enviada a 64 unidades (${urgency}).`);
   };
 
+  const handleAddMaintenanceRecord = (record: MaintenanceRecord) => {
+    setMaintenanceRecords((prev) => [record, ...prev]);
+    showToast(`Mantenimiento registrado para ${record.vehiclePlate}: $${record.costARS.toLocaleString('es-AR')} ARS`);
+  };
+
+  const handleUpdateMaintenanceRecord = (record: MaintenanceRecord) => {
+    setMaintenanceRecords((prev) =>
+      prev.map((r) => (r.id === record.id ? record : r))
+    );
+    showToast(`Mantenimiento actualizado para ${record.vehiclePlate}.`);
+  };
+
+  const handleDeleteMaintenanceRecord = (id: string) => {
+    setMaintenanceRecords((prev) => prev.filter((r) => r.id !== id));
+    showToast('Registro de taller eliminado.');
+  };
+
   const handleOpenDocViewer = (
     title: string,
     subtitle: string,
@@ -148,7 +226,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-100 text-slate-900 font-sans selection:bg-[#F6C300] selection:text-slate-950 flex flex-col">
+    <div className={`min-h-screen font-sans selection:bg-[#F6C300] selection:text-slate-950 flex flex-col transition-colors duration-250 ${
+      theme === 'dark' ? 'bg-[#0b1120] text-slate-100' : 'bg-slate-100 text-slate-900'
+    }`}>
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -173,10 +253,14 @@ export default function App() {
         onOpenNotifications={() => setNotificationsOpen(true)}
         unreadNotifications={3}
         onOpenMobileMenu={() => setIsMobileDrawerOpen(true)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+        fontScale={fontScale}
+        onChangeFontScale={handleChangeFontScale}
       />
 
       {/* Perspective / Demo Banner bar */}
-      <div className="bg-slate-900 text-white text-xs py-1.5 px-3 sm:px-4">
+      <div className={`${theme === 'dark' ? 'bg-slate-950 border-b border-slate-800' : 'bg-slate-900'} text-white text-xs py-1.5 px-3 sm:px-4 transition-colors`}>
         <div className="max-w-4xl mx-auto flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 truncate">
             <span className="w-2 h-2 rounded-full bg-[#F6C300] shrink-0" />
@@ -213,7 +297,7 @@ export default function App() {
       <main className="flex-1 flex justify-center py-3 sm:py-5 px-2.5 sm:px-4 overflow-x-hidden">
         <div className={`w-full transition-all duration-300 ${
           isMobileView 
-            ? 'max-w-md bg-white rounded-3xl shadow-xl border border-slate-200/80 p-3 sm:p-4 min-h-[88vh]' 
+            ? `max-w-md ${theme === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-slate-200/80'} rounded-3xl shadow-xl border p-3 sm:p-4 min-h-[88vh]` 
             : 'max-w-xl sm:max-w-4xl'
         }`}>
 
@@ -231,6 +315,12 @@ export default function App() {
                 setEditingItem(null);
                 setIsBillingModalOpen(true);
               }}
+              currentRole={currentRole}
+              maintenanceAlertsCount={maintenanceRecords.filter(m => m.status === 'overdue' || m.status === 'due_soon').length}
+              theme={theme}
+              onToggleTheme={handleToggleTheme}
+              fontScale={fontScale}
+              onChangeFontScale={handleChangeFontScale}
             />
           )}
 
@@ -299,6 +389,16 @@ export default function App() {
             <PerformanceDashboardScreen />
           )}
 
+          {activeTab === 'mantenimiento' && (
+            <MaintenanceLogScreen
+              records={maintenanceRecords}
+              onAddRecord={handleAddMaintenanceRecord}
+              onUpdateRecord={handleUpdateMaintenanceRecord}
+              onDeleteRecord={handleDeleteMaintenanceRecord}
+              onOpenQuickControl={() => setIsQuickControlOpen(true)}
+            />
+          )}
+
         </div>
       </main>
 
@@ -321,6 +421,10 @@ export default function App() {
           setIsBillingModalOpen(true);
         }}
         onSignOut={() => setIsLoggedIn(false)}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
+        fontScale={fontScale}
+        onChangeFontScale={handleChangeFontScale}
       />
 
       {/* FIXED BOTTOM NAVIGATION BAR (Thumb zone on mobile) */}
@@ -328,6 +432,7 @@ export default function App() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         unreadMessagesCount={3}
+        theme={theme}
       />
 
       {/* ======================================================== */}

@@ -1,6 +1,33 @@
 export type UserRole = 'chofer' | 'admin';
 
-export type TabType = 'inicio' | 'gps' | 'mensajes' | 'liquidacion' | 'documentos' | 'perfil' | 'rendimiento';
+export type ThemeMode = 'light' | 'dark';
+export type FontScale = 'normal' | 'large' | 'xlarge'; // A, A+, A++
+
+export type TabType = 'inicio' | 'gps' | 'mensajes' | 'liquidacion' | 'documentos' | 'perfil' | 'rendimiento' | 'mantenimiento';
+
+export type MaintenanceStatus = 'overdue' | 'due_soon' | 'up_to_date';
+
+export type ServiceCategory = 'oil' | 'tires' | 'brakes' | 'gnc' | 'vtv' | 'general';
+
+export interface MaintenanceRecord {
+  id: string;
+  vehiclePlate: string;
+  vehicleModel: string;
+  driverName?: string;
+  category: ServiceCategory;
+  serviceTitle: string;
+  description: string;
+  date: string;
+  odometerKm: number;
+  nextDueKm: number;
+  nextDueDate: string;
+  costARS: number;
+  workshop: string;
+  mechanic: string;
+  status: MaintenanceStatus; // 'overdue' | 'due_soon' | 'up_to_date'
+  invoiceNumber?: string;
+  notes?: string;
+}
 
 export interface BillingItem {
   id: string;
